@@ -11,6 +11,8 @@ import { BACKEND_URL, SITE_URL } from '../../config'
 import axios from 'axios'
 
 
+import { Logo } from '../icons/Logo'
+
 export function DashBoard() {
 
   const [modalopen, setmodalopen] = useState(false);
@@ -43,16 +45,16 @@ export function DashBoard() {
     async function fetchShareStatus() {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/v1/brain/share`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        if ((response as any).data.hash) {
-          setShareLink(`${SITE_URL}/share/${(response as any).data.hash}`)
+        const hash = response.data.hash || response.data.link;
+        if (hash && hash !== "undefined") {
+          setShareLink(`${SITE_URL}/share/${hash}`);
         } else {
           setShareLink(null);
         }
-      } catch {
+      } catch (err) {
+        console.error("Failed to fetch share status:", err);
         setShareLink(null);
       }
     }
@@ -63,11 +65,17 @@ export function DashBoard() {
     setShareLoading(true);
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, { share: true }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(`token`)}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
-      setShareLink(`${SITE_URL}/share/${(response as any).data.hash}`);
+      const hash = response.data.hash || response.data.link;
+      if (hash && hash !== "undefined") {
+        setShareLink(`${SITE_URL}/share/${hash}`);
+      } else {
+        alert("Server returned an invalid share hash. Please try again.");
+      }
+    } catch (err) {
+      console.error("Sharing failed:", err);
+      alert("Could not enable sharing. Please check your connection.");
     } finally {
       setShareLoading(false);
     }
@@ -88,55 +96,121 @@ export function DashBoard() {
   }
 
 
-  return (<div>
-    <Sidebar setTypeFilter={setTypeFilter} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-    {sidebarOpen && <div className="fixed inset-0 bg-slate-900/50 z-40 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
-    <div className='p-4 ml-0 md:ml-72 min-h-screen bg-purple-50'>
-      <CreateContentModal open={modalopen} onClose={() => {
-        setmodalopen(false)
-      }} />
-      <div className='flex justify-end items-center mb-4'>
-        <div className='flex justify-end gap-4'>
-          <Button variant='primary' text='Add Content ' startIcon={<PlusIcon />} onClick={() => {
-            setmodalopen(true)
-          }} />
+  return (
+    <div className="min-h-screen bg-[#fafafa]">
+      <Sidebar setTypeFilter={setTypeFilter} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-          {shareLink ?
-            (
-              <>
-                <Button onClick={handleShareOff} variant='secondary' text='Share' startIcon={<ShareIcon />} loading={shareLoading} />
-                <div className='flex items-center gap-2 bg-white px-2 py-1 rounded shadow border text-sm max-w-full overflow-x-auto' >
-                  <span>Share link:</span>
-                  <a href={shareLink} target='_blank' rel="noopener noreferrer" className='text-blue-600 underline truncate max-w-[200px]'>{shareLink}</a>
-                  <Button onClick={() => { navigator.clipboard.writeText(shareLink) }} variant='primary' text='Copy' />
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 md:hidden transition-all duration-300" onClick={() => setSidebarOpen(false)}></div>
+      )}
+
+      <div className="ml-0 md:ml-72 min-h-screen transition-all duration-300">
+        <CreateContentModal open={modalopen} onClose={() => setmodalopen(false)} />
+
+        {/* Header/Actions Bar */}
+        <header className="sticky top-0 z-30 bg-[#fafafa]/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 md:px-10 md:py-6">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="animate-fade-in">
+              <h1 className="text-2xl font-bold text-gray-900">Your Knowledge</h1>
+              <p className="text-sm text-gray-500">Manage your ideas and collections</p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {shareLink ? (
+                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-purple-100 text-xs md:text-sm animate-fade-in" >
+                  <span className="text-gray-400">Share link:</span>
+                  <a href={shareLink} target='_blank' rel="noopener noreferrer" className='text-purple-600 font-medium truncate max-w-[120px] md:max-w-[200px] hover:underline'>{shareLink}</a>
+                  <button onClick={() => { navigator.clipboard.writeText(shareLink) }} className="hover:text-purple-700 font-bold ml-1 transition-colors cursor-pointer">Copy</button>
+                  <div className="h-4 w-px bg-gray-200 mx-1"></div>
+                  <button onClick={handleShareOff} className="text-red-500 hover:text-red-600 text-xs font-semibold transition-colors cursor-pointer">Stop</button>
                 </div>
-              </>
-            ) : (
-              <Button onClick={handleShareOn} variant='secondary' text='Share' startIcon={<ShareIcon />} />
-            )
-          }
-        </div>
-      </div>
-      <input type='text' value={search} onChange={e => setSearch(e.target.value)} placeholder='Search by title ' className='border rounded px-3 py-2 w-full md:w-64 mb-4' />
-      <div className='flex gap-4 flex-wrap'>
-        {loading && <div>Loading....</div>}
-        {error && <div className='text-red-500' >{error}</div>}
-        {filteredCards.map(card => (
-          <Card
-            key={card._id}
-            id={card._id}
-            title={card.title}
-            link={card.link}
-            type={card.type}
-            onDelete={deleteCard}
-            onShare={() => { navigate(`/share/${card._id}`) }}
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-  )
+              ) : (
+                <Button onClick={handleShareOn} variant='secondary' text='Share Collection' startIcon={<ShareIcon />} loading={shareLoading} />
+              )}
 
+              <Button variant='primary' text='Add Content' startIcon={<PlusIcon />} onClick={() => setmodalopen(true)} />
+            </div>
+          </div>
+        </header>
+
+        <main className="p-6 md:p-10 max-w-7xl mx-auto">
+          {/* Search bar */}
+          <div className="mb-10 relative max-w-md animate-fade-in">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-400">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            </div>
+            <input
+              type='text'
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder='Search your brain...'
+              className='bg-white border border-gray-100 rounded-2xl pl-11 pr-4 py-3 w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600/10 focus:border-purple-600 transition-all'
+            />
+          </div>
+
+          {/* Grid */}
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 animate-pulse">
+              <div className="w-12 h-12 bg-purple-100 rounded-full mb-4"></div>
+              <div className="h-4 w-32 bg-gray-100 rounded"></div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 text-red-600 p-6 rounded-3xl border border-red-100 flex items-center gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              {error}
+            </div>
+          ) : filteredCards.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-in">
+              <div className="p-6 bg-gray-50 rounded-full mb-6 text-gray-200">
+                <Logo />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No ideas found</h3>
+              <p className="text-gray-500 max-w-xs">
+                {search ? `We couldn't find anything matching "${search}"` : "Your second brain is empty. Start by adding some content!"}
+              </p>
+            </div>
+          ) : (
+            <div className='flex flex-wrap gap-8 justify-center md:justify-start animate-fade-in'>
+              {filteredCards.map(card => (
+                <Card
+                  key={card._id}
+                  title={card.title}
+                  link={card.link}
+                  type={card.type as "youtube" | "twitter" | "notes"}
+                  id={card._id}
+                  text={card.text}
+                  onDelete={deleteCard}
+                  onShare={() => { navigate(`/share/${card._id}`) }}
+                />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
+
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out forwards;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+    </div>
+  );
 }
 
 export default DashBoard
+

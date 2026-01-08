@@ -103,11 +103,12 @@ userRouter.post("/signin", async (req, res) => {
 });
 
 userRouter.post("/content", userMiddleware, async (req, res) => {
-    const contentTypes = ["link", "document", "twitter", "youtube"] as const
+    const contentTypes = ["link", "document", "twitter", "youtube", "notes"] as const
     const contentZodSchema = z.object({
-        link: z.string().url(),
+        link: z.string().url().optional().or(z.literal("")),
         type: z.enum(contentTypes),
         title: z.string().min(1, "Title is required"),
+        text: z.string().optional(),
         tags: z.array(z.string()).optional()
     });
     const content = req.body
@@ -118,7 +119,7 @@ userRouter.post("/content", userMiddleware, async (req, res) => {
             message: "Error inputs"
         });
     }
-    const { link, type, title, tags } = result.data;
+    const { link, type, title, text, tags } = result.data;
     if (!userId) {
         return res.status(401).json({
             message: "Unauthorized"
@@ -135,9 +136,10 @@ userRouter.post("/content", userMiddleware, async (req, res) => {
             })
         )
         await contentModel.create({
-            link,
+            link: link || "",
             type,
             title,
+            text: text || "",
             tags: tagDocs,
             userId: new mongoose.Types.ObjectId(userId)
         })
@@ -197,6 +199,27 @@ userRouter.delete("/content", userMiddleware, async (req, res) => {
 
 });
 
+userRouter.get("/brain/share", userMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId
+        const link = await linkModel.findOne({
+            userId: new mongoose.Types.ObjectId(userId)
+        })
+        if (link) {
+            return res.status(200).json({
+                hash: link.hash
+            })
+        }
+        return res.status(200).json({
+            hash: null
+        })
+    } catch (e) {
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+})
+
 userRouter.post("/brain/share", userMiddleware, async (req, res) => {
     try {
         const share = req.body.share
@@ -207,14 +230,16 @@ userRouter.post("/brain/share", userMiddleware, async (req, res) => {
             })
             if (ExistingLink) {
                 return res.status(200).json({
-                    "link": `${ExistingLink.hash}`
+                    hash: ExistingLink.hash,
+                    link: ExistingLink.hash // Added for backward compatibility/redundancy
                 })
             }
             const link = await linkModel.create({
                 userId: new mongoose.Types.ObjectId(userId)
             })
             return res.status(200).json({
-                "link": `${link.hash}`
+                hash: link.hash,
+                link: link.hash // Added for backward compatibility/redundancy
             })
         }
         else {
@@ -234,34 +259,47 @@ userRouter.post("/brain/share", userMiddleware, async (req, res) => {
     }
 });
 
-userRouter.get("/brain/:shareLink", userMiddleware, async (req, res) => {
+userRouter.get("/brain/:shareLink", async (req, res) => {
+    try {
+        const hash = req.params.shareLink as string
+        console.log("Searching for hash:", hash);
 
-    const hash = req.params.shareLink as string
-    const linkHash = await linkModel.findOne({
-        hash: hash
-    })
-    if (!linkHash) {
-        return res.status(404).json({
-            message: "incorrect inputs"
-        });
-    }
-    const content = await contentModel.find({
-        userId: linkHash.userId
-    })
-        .populate("tags", "title")
-    const user = await UserModel.findOne({
-        _id: linkHash.userId
-    })
-    if (!user) {
-        return res.status(411).json({
-            message: "user does not exits of the content"
+        const linkHash = await linkModel.findOne({
+            hash: hash
+        })
+
+        if (!linkHash) {
+            console.log("Hash not found");
+            return res.status(404).json({
+                message: "This share link is invalid or has been disabled."
+            });
+        }
+
+        const content = await contentModel.find({
+            userId: linkHash.userId
+        }).populate("tags", "title")
+
+        const user = await UserModel.findOne({
+            _id: linkHash.userId
+        })
+
+        if (!user) {
+            console.log("User for link not found");
+            return res.status(404).json({
+                message: "The owner of this collection no longer exists."
+            })
+        }
+
+        res.status(200).json({
+            username: user.username,
+            contents: content
+        })
+    } catch (e) {
+        console.error("Public share error:", e);
+        res.status(500).json({
+            message: "An internal server error occurred while fetching shared content."
         })
     }
-
-    res.status(200).json({
-        username: user.username,
-        content: content
-    })
 });
 
 export { userRouter }

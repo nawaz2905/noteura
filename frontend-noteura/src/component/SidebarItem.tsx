@@ -4,14 +4,12 @@ export function SidebarItem({ text, icon }: {
     text: string;
     icon: ReactElement;
 }) {
-    return <div className="flex items-center py-2 text-gray-700 cursor-pointer hover:bg-gray-200 rounded mx-w-48 pl-8 transition-all duration-400">
-        <div className="pr-2">
-
+    return <div className="flex items-center py-3 px-6 text-gray-600 cursor-pointer hover:bg-purple-50 hover:text-purple-700 rounded-xl mx-4 transition-all duration-300 group">
+        <div className="pr-4 transition-transform duration-300 group-hover:scale-110">
             {icon}
         </div>
-        <div >
+        <div className="font-medium">
             {text}
         </div>
-
     </div>
 }

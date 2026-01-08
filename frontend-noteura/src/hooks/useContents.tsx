@@ -6,7 +6,7 @@ export interface CardType {
     _id: string;
     title: string;
     text: string;
-    type: "youtube" | "twitter";
+    type: "youtube" | "twitter" | "notes";
     link: string;
 }
 
