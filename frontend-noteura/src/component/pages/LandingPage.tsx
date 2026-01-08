@@ -23,8 +23,8 @@ export function LandingPage() {
         <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
             {/* Navbar */}
             <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 ${scrolled
-                    ? "bg-white/70 backdrop-blur-lg py-3 shadow-sm border-b border-gray-100"
-                    : "bg-transparent py-5"
+                ? "bg-white/70 backdrop-blur-lg py-3 shadow-sm border-b border-gray-100"
+                : "bg-transparent py-5"
                 }`}>
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-2 text-2xl font-['Germania_One'] text-gray-900 transition-transform duration-300 origin-left"
@@ -158,8 +158,14 @@ export function LandingPage() {
                         <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Twitter</a>
                         <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Github</a>
                         <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Privacy</a>
+
                     </div>
+                    <p className="text-xs text-gray-500">
+                        ~made by Nawaz Khan
+                    </p>
+
                 </div>
+
             </footer>
 
             <style>{`
