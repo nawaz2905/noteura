@@ -10,5 +10,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/api/v1",userRouter)
-console.log("Backend Running");
+app.get("/", (req, res) => {
+  res.json({ status: "Backend running" });
+});
+
 export default app;
