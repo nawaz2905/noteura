@@ -10,8 +10,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/api/v1",userRouter)
-app.get("/", (req, res) => {
-  res.json({ status: "Backend running" });
+app.get("/health", (req, res) => {
+  res.send("Backend is working ✅");
 });
 
 export default app;
