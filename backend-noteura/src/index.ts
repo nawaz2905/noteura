@@ -3,6 +3,7 @@ import './db.js'
 import cors from 'cors'
 import {userRouter} from './routes/user.js'
 
+
 import express from 'express'
 
 const app = express()
