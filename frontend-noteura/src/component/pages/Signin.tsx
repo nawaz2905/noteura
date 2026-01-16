@@ -1,6 +1,6 @@
 import { Input } from "../Input";
 import { Button } from "../Button";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,12 @@ export function Signin() {
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false);
 
     async function signin() {
         const username = usernameRef.current?.value
         const password = passwordRef.current?.value
+        setLoading(true);
         try {
             const responce = await axios.post(BACKEND_URL + "/api/v1/signin", {
                 username,
@@ -23,7 +25,10 @@ export function Signin() {
             localStorage.setItem("token", jwt);
             navigate("/dashboard")
         } catch (e) {
-            alert("Error signing in. Please check your credentials.")
+            // Handle error appropriately
+            console.error(e);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -48,16 +53,16 @@ export function Signin() {
                     <div className="space-y-4">
                         <div className=" flex flex-col items-center">
                             <label className="text-sm font-medium text-gray-700 ml-2 mb-1 block ">Email</label>
-                            <Input  reference={usernameRef} placeholder="Enter your email" />
+                            <Input reference={usernameRef} placeholder="Enter your email" />
                         </div>
-                        <div  className="flex flex-col items-center" >
+                        <div className="flex flex-col items-center" >
                             <label className="text-sm font-medium text-gray-700 ml-2 mb-1 block">Password</label>
                             <Input reference={passwordRef} placeholder="••••••••" />
                         </div>
                     </div>
 
                     <div className="mt-8">
-                        <Button onClick={signin} variant="primary" text="Sign In" fullwidth={true} loading={false} />
+                        <Button onClick={signin} variant="primary" text="Sign In" fullwidth={true} loading={loading} />
                     </div>
 
                     <div className="mt-8 text-center">

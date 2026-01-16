@@ -17,14 +17,17 @@ const defaultStyle = "px-4 py-2 rounded-md font-medium flex items-center justify
 export function Button({ variant, text, startIcon, onClick, fullwidth, loading }: ButtonProps) {
     return <button
         onClick={onClick}
-        className={`${variantClasses[variant]} ${defaultStyle} ${fullwidth ? "w-full" : ""} ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer active:scale-95"}`}
+        className={`${variantClasses[variant]} ${defaultStyle} ${fullwidth ? "w-full" : ""} ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer active:scale-95"} relative`}
         disabled={loading}
     >
-        {loading ? (
-            <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-        ) : (
-            startIcon
+        {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+            </div>
         )}
-        <span className={loading ? "opacity-0" : "opacity-100"}>{text}</span>
+        <div className={`flex items-center gap-2 ${loading ? "opacity-0" : "opacity-100"}`}>
+            {startIcon}
+            <span>{text}</span>
+        </div>
     </button>
 }

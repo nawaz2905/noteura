@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../Button";
 import { Input } from "../Input";
 import axios from "axios";
@@ -11,19 +11,23 @@ export function Signup() {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false);
 
     async function signup() {
         const username = usernameRef.current?.value;
         const password = passwordRef.current?.value;
+        setLoading(true);
         try {
             await axios.post(BACKEND_URL + "/api/v1/signup", {
                 username,
                 password
             })
-            alert("You have signed up!")
             navigate("/signin")
         } catch (e) {
-            alert("Error signing up. Please try again.")
+            // Handle error appropriately, e.g., show a toast or error message in UI
+            console.error(e);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -57,7 +61,7 @@ export function Signup() {
                     </div>
 
                     <div className="mt-8">
-                        <Button onClick={signup} variant="primary" text="Sign Up" fullwidth={true} loading={false} />
+                        <Button onClick={signup} variant="primary" text="Sign Up" fullwidth={true} loading={loading} />
                     </div>
 
                     <div className="mt-8 text-center">
