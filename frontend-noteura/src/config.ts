@@ -1,2 +1,2 @@
-export const BACKEND_URL = "http://localhost:10000"
+export const BACKEND_URL = "https://backend-noteura.onrender.com"
 export const SITE_URL = window.location.origin;
