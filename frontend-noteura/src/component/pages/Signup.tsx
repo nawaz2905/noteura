@@ -26,6 +26,7 @@ export function Signup() {
         } catch (e) {
             // Handle error appropriately, e.g., show a toast or error message in UI
             console.error(e);
+            alert("Error during signup: " + (e.response?.data?.message || e.message));
         } finally {
             setLoading(false);
         }

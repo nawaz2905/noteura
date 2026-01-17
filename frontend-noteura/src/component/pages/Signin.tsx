@@ -27,6 +27,7 @@ export function Signin() {
         } catch (e) {
             // Handle error appropriately
             console.error(e);
+            alert("Error during signin: " + (e.response?.data?.message || e.message));
         } finally {
             setLoading(false);
         }
