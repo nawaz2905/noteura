@@ -20,61 +20,34 @@ export function LandingPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
-            {/* Navbar */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 ${scrolled
-                ? "bg-white/70 backdrop-blur-lg py-3 shadow-sm border-b border-gray-100"
-                : "bg-transparent py-5"
-                }`}>
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-2xl font-['Germania_One'] text-gray-900 transition-transform duration-300 origin-left"
-                        style={{ transform: scrolled ? 'scale(0.9)' : 'scale(1)' }}>
-                        <div className="text-purple-700">
-                            <Logo />
-                        </div>
-                        Noteura
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => navigate("/signin")}
-                            className="text-gray-600 hover:text-gray-900 font-medium transition-colors cursor-pointer"
-                        >
-                            Sign In
-                        </button>
-                        <Button
-                            variant="primary"
-                            text="Get Started"
-                            onClick={() => navigate("/signup")}
-                        />
-                    </div>
-                </div>
-            </nav>
+        <div className="min-h-screen bg-[#fafafa] dark:bg-slate-950 overflow-x-hidden">
+            {/* Navbar is now handled by Layout */}
 
             {/* Hero Section */}
             <section className="pt-32 pb-20 px-6">
                 <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-                    <span className="inline-block py-1 px-3 mb-6 text-sm font-semibold text-purple-700 bg-purple-100 rounded-full animate-fade-in">
+                    <span className="inline-block py-1 px-3 mb-6 text-sm font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/30 rounded-full animate-fade-in">
                         The ultimate Second Brain
                     </span>
-                    <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight tracking-tight">
                         Capture your thoughts, <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
                             organize your world.
                         </span>
                     </h1>
-                    <p className="text-xl text-gray-600 mb-10 max-w-2xl leading-relaxed">
+                    <p className="text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl leading-relaxed">
                         Noteura is the minimalist collective for your links, tweets, and personal reflections. Keep everything that matters in one stunningly organized place.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <button
                             onClick={() => navigate("/signup")}
-                            className="px-8 py-4 bg-purple-700 text-white rounded-xl font-semibold text-lg hover:bg-purple-800 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-purple-200 cursor-pointer"
+                            className="px-8 py-4 bg-purple-700 text-white rounded-xl font-semibold text-lg hover:bg-purple-800 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-purple-200 dark:shadow-purple-900/30 cursor-pointer"
                         >
                             Start for Free
                         </button>
                         <button
                             onClick={() => navigate("/signin")}
-                            className="px-8 py-4 bg-white text-gray-900 border border-gray-200 rounded-xl font-semibold text-lg hover:border-purple-600 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                            className="px-8 py-4 bg-white dark:bg-slate-800 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700 rounded-xl font-semibold text-lg hover:border-purple-600 dark:hover:border-purple-500 transition-all hover:scale-105 active:scale-95 cursor-pointer"
                         >
                             Login to Account
                         </button>
@@ -83,7 +56,7 @@ export function LandingPage() {
                     {/* Visual Decor */}
                     <div className="mt-20 w-full relative">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-purple-400/20 blur-[100px] -z-10 rounded-full"></div>
-                        <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-4 md:p-8 animate-float">
+                        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4 md:p-8 animate-float">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <FeatureCard
                                     icon={<YoutubeIcon />}
@@ -107,11 +80,11 @@ export function LandingPage() {
             </section>
 
             {/* Why Noteura Section */}
-            <section className="py-24 bg-gray-50 px-6">
+            <section className="py-24 bg-gray-50 dark:bg-slate-900/50 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-900 mb-4">Everything you need</h2>
-                        <p className="text-gray-600">Designed for speed, built for focus.</p>
+                        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Everything you need</h2>
+                        <p className="text-gray-600 dark:text-gray-400">Designed for speed, built for focus.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -143,10 +116,10 @@ export function LandingPage() {
             </section>
 
             {/* Footer */}
-            <footer className="py-12 px-6 border-t border-gray-100">
+            <footer className="py-12 px-6 border-t border-gray-100 dark:border-slate-800">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex items-center gap-2 text-xl font-['Germania_One'] text-gray-900">
-                        <div className="text-purple-700 scale-75">
+                    <div className="flex items-center gap-2 text-xl font-['Germania_One'] text-gray-900 dark:text-white">
+                        <div className="text-purple-700 dark:text-purple-500 scale-75">
                             <Logo />
                         </div>
                         Noteura
@@ -155,9 +128,9 @@ export function LandingPage() {
                         &copy; 2026 Noteura. Build your second brain today.
                     </div>
                     <div className="flex gap-6">
-                        <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Twitter</a>
-                        <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Github</a>
-                        <a href="#" className="text-gray-400 hover:text-purple-600 transition-colors">Privacy</a>
+                        <a href="#" className="text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Twitter</a>
+                        <a href="#" className="text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Github</a>
+                        <a href="#" className="text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy</a>
 
                     </div>
                     <p className="text-xs text-gray-500">
@@ -191,24 +164,24 @@ export function LandingPage() {
 
 function FeatureCard({ icon, title, desc }: { icon: any, title: string, desc: string }) {
     return (
-        <div className="flex flex-col items-center p-6 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 text-center">
-            <div className="w-12 h-12 flex items-center justify-center bg-purple-100 text-purple-700 rounded-lg mb-4">
+        <div className="flex flex-col items-center p-6 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-slate-700 text-center">
+            <div className="w-12 h-12 flex items-center justify-center bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-lg mb-4">
                 {icon}
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{desc}</p>
         </div>
     );
 }
 
 function SmallFeature({ icon, title, desc }: { icon: any, title: string, desc: string }) {
     return (
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition-all">
-            <div className="text-purple-600 mb-4 scale-110 origin-left">
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-gray-100 dark:border-slate-800 hover:shadow-lg dark:hover:shadow-purple-900/10 transition-all">
+            <div className="text-purple-600 dark:text-purple-400 mb-4 scale-110 origin-left">
                 {icon}
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-            <p className="text-gray-500 text-sm">{desc}</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">{desc}</p>
         </div>
     );
 }

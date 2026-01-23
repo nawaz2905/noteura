@@ -16,6 +16,8 @@ const ContentType = {
     Notes: "notes"
 } as const;
 
+import toast from "react-hot-toast";
+
 export function CreateContentModal({ open, onClose }: { open: boolean, onClose: () => void }) {
     const titleref = useRef<HTMLInputElement>(null);
     const linkref = useRef<HTMLInputElement>(null);
@@ -30,7 +32,7 @@ export function CreateContentModal({ open, onClose }: { open: boolean, onClose: 
         const text = textref.current?.value;
 
         if (!title) {
-            alert("Title is required");
+            toast.error("Title is required");
             return;
         }
 
@@ -46,7 +48,7 @@ export function CreateContentModal({ open, onClose }: { open: boolean, onClose: 
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             });
-            alert("Content saved!");
+            toast.success("Content saved!");
             onClose();
             // Clear refs
             if (titleref.current) titleref.current.value = "";
@@ -54,7 +56,7 @@ export function CreateContentModal({ open, onClose }: { open: boolean, onClose: 
             if (textref.current) textref.current.value = "";
         } catch (e: any) {
             console.error("Submission error:", e);
-            alert(e.response?.data?.message || "Failed to save content");
+            toast.error(e.response?.data?.message || "Failed to save content");
         } finally {
             setLoading(false);
         }
