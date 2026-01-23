@@ -38,9 +38,9 @@ export function Signup() {
 
     return (
         <div className="min-h-screen w-screen flex flex-col justify-center items-center bg-[#fafafa] dark:bg-slate-950 px-6">
-            <div className="w-full max-w-md animate-fade-in">
+            <div className="w-full max-w-sm animate-fade-in">
                 {/* Logo and Brand */}
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center mb-4">
                     <div className="text-purple-700 dark:text-purple-500 mb-2">
                         <Logo />
                     </div>
@@ -48,13 +48,13 @@ export function Signup() {
                 </div>
 
                 {/* Signup Card */}
-                <div className="bg-white dark:bg-slate-900 shadow-xl shadow-purple-100/50 dark:shadow-none rounded-3xl border border-gray-100 dark:border-slate-800 p-8 md:p-10">
-                    <div className="text-center mb-8">
+                <div className="bg-white dark:bg-slate-900 shadow-xl shadow-purple-100/50 dark:shadow-none rounded-3xl border border-gray-100 dark:border-slate-800 p-6 md:p-8">
+                    <div className="text-center mb-4">
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Create Account</h2>
                         <p className="text-gray-500 dark:text-gray-400">Join Noteura and start building your second brain</p>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <div className="flex flex-col items-center">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">Email</label>
                             <div className="w-full flex justify-center text-gray-900 dark:text-white">
@@ -69,11 +69,11 @@ export function Signup() {
                         </div>
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-5">
                         <Button onClick={signup} variant="primary" text="Sign Up" fullwidth={true} loading={loading} />
                     </div>
 
-                    <div className="my-6 flex items-center">
+                    <div className="my-4 flex items-center">
                         <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
                         <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">Or continue with</span>
                         <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
@@ -104,7 +104,7 @@ export function Signup() {
                         />
                     </div>
 
-                    <div className="mt-8 text-center">
+                    <div className="mt-5 text-center">
                         <p className="text-gray-600 dark:text-gray-400">
                             Already have an account?{" "}
                             <button
