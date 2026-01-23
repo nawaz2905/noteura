@@ -88,9 +88,16 @@ export function Signup() {
                                         const response = await axios.post(BACKEND_URL + "/api/v1/google-auth", {
                                             credential: credentialResponse.credential
                                         });
-                                        localStorage.setItem("token", response.data.token);
-                                        toast.success("Google Login Successful");
-                                        navigate("/dashboard");
+                                        if (response.data.token) {
+                                            localStorage.setItem("token", response.data.token);
+                                            toast.success("Google Login Successful");
+                                            // Use setTimeout to ensure state updates before navigation
+                                            setTimeout(() => {
+                                                navigate("/dashboard");
+                                            }, 100);
+                                        } else {
+                                            toast.error("No token received from server");
+                                        }
                                     } catch (error: any) {
                                         console.error("Google auth error:", error);
                                         toast.error("Google authentication failed: " + (error.response?.data?.message || error.message));
