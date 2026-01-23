@@ -6,7 +6,6 @@ import { BACKEND_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../icons/Logo";
 
-
 import toast from "react-hot-toast";
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -86,11 +85,12 @@ export function Signup() {
                                 if (credentialResponse.credential) {
                                     try {
                                         const response = await axios.post(BACKEND_URL + "/api/v1/google-auth", {
-                                            credential: credentialResponse.credential
+                                            credential: credentialResponse.credential,
+                                            mode: "signup"
                                         });
                                         if (response.data.token) {
                                             localStorage.setItem("token", response.data.token);
-                                            toast.success("Google Login Successful");
+                                            toast.success("Account created successfully!");
                                             // Use setTimeout to ensure state updates before navigation
                                             setTimeout(() => {
                                                 navigate("/dashboard");
@@ -100,7 +100,12 @@ export function Signup() {
                                         }
                                     } catch (error: any) {
                                         console.error("Google auth error:", error);
-                                        toast.error("Google authentication failed: " + (error.response?.data?.message || error.message));
+                                        const errorMessage = error.response?.data?.message || error.message;
+                                        if (errorMessage.includes("Email already exists")) {
+                                            toast.error("This email is already registered. Please sign in instead.");
+                                        } else {
+                                            toast.error("Google authentication failed: " + errorMessage);
+                                        }
                                     }
                                 }
                             }}

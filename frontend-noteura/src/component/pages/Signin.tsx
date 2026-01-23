@@ -87,7 +87,8 @@ export function Signin() {
                                 if (credentialResponse.credential) {
                                     try {
                                         const response = await axios.post(BACKEND_URL + "/api/v1/google-auth", {
-                                            credential: credentialResponse.credential
+                                            credential: credentialResponse.credential,
+                                            mode: "signin"
                                         });
                                         if (response.data.token) {
                                             localStorage.setItem("token", response.data.token);
