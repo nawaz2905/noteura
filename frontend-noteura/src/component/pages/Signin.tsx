@@ -59,7 +59,7 @@ export function Signin() {
                         <div className=" flex flex-col items-center">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block ">Email</label>
                             <div className="w-full flex justify-center text-gray-900 dark:text-white">
-                                <Input reference={usernameRef} placeholder="Enter your email" />
+                                <Input reference={usernameRef} placeholder="Write your email" />
                             </div>
                         </div>
                         <div className="flex flex-col items-center" >
@@ -71,10 +71,6 @@ export function Signin() {
                     </div>
 
                     <div className="mt-5">
-
-
-
-
                         <Button onClick={signin} variant="primary" text="Sign In" fullwidth={true} loading={loading} />
                     </div>
 
